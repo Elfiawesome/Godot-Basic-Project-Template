@@ -1,6 +1,6 @@
 class_name TransitionManager extends Node
 
-var transition_nodes:Control
+var transition_nodes:CanvasLayer
 var _transition_scenes:Dictionary = {}
 
 enum {

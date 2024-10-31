@@ -1,6 +1,6 @@
 class_name RoomManager extends Control
 @export var room_nodes:Control
-@export var transition_nodes:Control
+@export var transition_nodes:CanvasLayer
 
 enum ROOM_ID {
 	MAIN_MENU
