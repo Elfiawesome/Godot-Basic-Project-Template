@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 global="*res://scripts/global/global.gd"
+resource_registry="*res://scripts/global/resource_registry.gd"
 
 [debug]
 
