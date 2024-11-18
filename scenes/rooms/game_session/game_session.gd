@@ -1,5 +1,5 @@
 class_name GameSession extends Room
-
+# https://gitmoji.dev/
 var game_server:GameServer
 var object_manager:ObjectManager = ObjectManager.new(self)
 
@@ -14,7 +14,13 @@ func _init() -> void:
 	# load all game objects into object_manager
 	object_manager.load_groups()
 	# Initialize game_server
-	game_server = GameServer.Integrated.new(object_manager)
+	if global._instance_num == 0:
+		game_server = GameServer.Integrated.new(object_manager)
+	else:
+		game_server = GameServer.Client.new(object_manager)
+	add_child(game_server)
+	game_server.connect_to_server()
+	
 
 # When we leave the game session, we unregistered related game objects
 func shutdown() -> void:

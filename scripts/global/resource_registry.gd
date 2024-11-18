@@ -42,7 +42,6 @@ func register_resource(name_space: String, type: ResourceType, id: String, resou
 	var resource:Resource = load(resource_path)
 	_registry[full_id] = resource
 	resource_registered.emit(name_space, type_str, id, resource)
-	print("[RR]: Successfully registered ID %s" % full_id)
 
 # Get a resource by its namespaced  and ID
 func get_resource_id(name_space: String, type: ResourceType, id: String) -> String:
@@ -96,7 +95,6 @@ func clear_namespace(name_space: String) -> void:
 func clear_types(type: resource_registry.ResourceType) -> void:
 	var keys_to_remove := get_resources_by_type(type)
 	for key in keys_to_remove:
-		print("[RR]: Successfully unregistered ID %s" % key)
 		_registry.erase(key)
 
 

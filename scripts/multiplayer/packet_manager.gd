@@ -10,6 +10,7 @@ func load_packets() -> void:
 
 func register_packet(packet_name:String, packet:GameServerPacket) -> void:
 	_packets[packet_name] = packet
+	packet.packet_name = packet_name
 
 func get_packet(packet_name: String) -> GameServerPacket:
 	if !_packets.has(packet_name):
