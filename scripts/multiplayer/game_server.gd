@@ -24,6 +24,7 @@ class Integrated extends GameServer:
 		server.server_failed.connect(func(error:int)->void:print("[GS-I]: Integrated Server failed. error: %s" % error))
 		server.connect_to_server()
 		add_child(server)
+		my_player_id = server.hash_username("Server")
 	func client_requested_connection(waiting_client_id:int, client_id:int, userdata:Dictionary) -> void:
 		if client_id == my_player_id:
 			server.reject_waiting_client(waiting_client_id, NetworkLostMsg.ERR.DUPLICATE_USERNAME)
@@ -37,24 +38,25 @@ class Integrated extends GameServer:
 	func _on_data_received(client_id:int, data:Variant, channel:int) -> void:
 		if channel==0: return
 		elif channel==1:
-			if data is Dictionary:
-				if data.has("packet_name") && data.has("data"):
-					pass
+			if is_packet_valid(data):
+				var packet := packet_manager.get_packet(data["packet_name"])
+				if packet != null: packet.run_as_integrated(self, client_id, data["data"])
 	
 	func send_data(client_id:int, data:Variant, channel:int = 1) -> void:
 		server.send_data(client_id, data, channel)
 	
-	func broadcast_all_data(data:Variant, channel:int = 2) -> void:
+	func broadcast_all_data(data:Variant, channel:int = 1) -> void:
 		for client_id:int in server.client_datas:
 			server.send_data(client_id, data, channel)
 	
-	func broadcast_specific_data(client_ids:Array, data:Variant, channel:int = 2) -> void:
+	func broadcast_specific_data(client_ids:Array, data:Variant, channel:int = 1) -> void:
 		for client_id:int in client_ids:
 			server.send_data(client_id, data, channel)
 	
-	func run_packet(packet_name:String, data:Dictionary = {}) -> void:
+	func run_packet(packet_name:String, params:Dictionary = {}) -> void:
 		var packet := packet_manager.get_packet(packet_name)
 		if packet == null: return
+		packet.run_as_integrated(self, my_player_id, params)
 
 class Client extends GameServer:
 	var client:NetworkClient
@@ -73,17 +75,19 @@ class Client extends GameServer:
 	func _on_data_received(data:Variant, channel:int) -> void:
 		if channel==0: return
 		elif channel==1:
-			if data is Dictionary:
-				if data.has("packet_name") && data.has("data"):
-					pass
+			if is_packet_valid(data):
+				var packet := packet_manager.get_packet(data["packet_name"])
+				if packet != null: packet.run_locally(self, 
+					packet.create_payload_from_dict(data["data"])
+				)
 	
 	func send_data(data:Variant, channel:int = 1) -> void:
 		client.send_data(data, channel)
 	
-	func run_packet(packet_name:String, data:Dictionary = {}) -> void:
+	func run_packet(packet_name:String, params:Dictionary = {}) -> void:
 		var packet := packet_manager.get_packet(packet_name)
 		if packet == null: return
-		
+		packet.run_as_client(self, params)
 
 func _init(new_object_manager:ObjectManager) -> void:
 	object_manager = new_object_manager
@@ -91,7 +95,13 @@ func _init(new_object_manager:ObjectManager) -> void:
 
 func connect_to_server() -> void: pass
 
-func run_packet(packet_name:String, data:Dictionary = {}) -> void: pass
+func run_packet(packet_name:String, params:Dictionary = {}) -> void: pass
+
+func is_packet_valid(data:Variant) -> bool:
+	if data is Dictionary:
+		if data.has("packet_name") && data.has("data"):
+			return true
+	return false
 
 func destroy() -> void:
 	packet_manager.destroy()
