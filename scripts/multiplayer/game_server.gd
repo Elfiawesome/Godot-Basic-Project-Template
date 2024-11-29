@@ -31,7 +31,7 @@ class Integrated extends GameServer:
 		else:
 			server.accept_waiting_client(waiting_client_id, client_id, userdata)
 
-	func _on_client_connected(client_id:int, userdata:Dictionary) -> void:
+	func _on_client_connected(_client_id:int, _userdata:Dictionary) -> void:
 		pass
 	func _on_client_disconnected(_client_id:int, _error_id:int, _custom_text:String) -> void:
 		pass
@@ -95,7 +95,7 @@ func _init(new_object_manager:ObjectManager) -> void:
 
 func connect_to_server() -> void: pass
 
-func run_packet(packet_name:String, params:Dictionary = {}) -> void: pass
+func run_packet(_packet_name:String, _params:Dictionary = {}) -> void: pass
 
 func is_packet_valid(data:Variant) -> bool:
 	if data is Dictionary:

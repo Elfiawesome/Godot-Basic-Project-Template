@@ -14,7 +14,7 @@ func register_packet(packet_name:String, packet:GameServerPacket) -> void:
 
 func get_packet(packet_name: String) -> GameServerPacket:
 	if !_packets.has(packet_name):
-		push_error("[PM]: Packet not found in packet registry: %s", packet_name)
+		push_error("[PM]: Packet not found in packet registry: %s" % packet_name)
 		return
 	return _packets[packet_name]
 

@@ -11,7 +11,7 @@ func update() -> void:
 	# Check for disconnection
 	var status:StreamPeerTCP.Status = connection.get_status()
 	if status == connection.STATUS_ERROR or status == connection.STATUS_NONE:
-		close_connection(0)
+		close_connection(NetworkLostMsg.ERR.CONNECTION_LOST)
 	# Check for receiving data
 	while(peer.get_available_packet_count() > 0):
 		data_received.emit(id, peer.get_var())

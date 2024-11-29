@@ -35,9 +35,9 @@ func run_as_integrated(game_server:GameServer.Integrated, client_id:int, params:
 	_process_server_logic(game_server, client_id, params, payload)
 	_broadcast_to_clients(game_server, client_id, params, payload)
 	run_locally(game_server, payload)
-func _process_server_logic(game_server:GameServer.Integrated, client_id:int, params:Dictionary, payload:Payload) -> void:
+func _process_server_logic(_game_server:GameServer.Integrated, _client_id:int, _params:Dictionary, _payload:Payload) -> void:
 	pass
-func _broadcast_to_clients(game_server:GameServer.Integrated, client_id:int, params:Dictionary, payload:Payload) -> void:
+func _broadcast_to_clients(game_server:GameServer.Integrated, _client_id:int, _params:Dictionary, payload:Payload) -> void:
 	game_server.broadcast_all_data(to_dict(payload.to_dict()))
 
 
@@ -48,7 +48,7 @@ func _send_client_request(game_server:GameServer.Client, params:Dictionary) -> v
 	game_server.send_data(to_dict(params))
 
 
-func run_locally(game_server:GameServer, payload:Payload) -> void:
+func run_locally(_game_server:GameServer, _payload:Payload) -> void:
 	# What will be run on both client and host players
 	pass
 
